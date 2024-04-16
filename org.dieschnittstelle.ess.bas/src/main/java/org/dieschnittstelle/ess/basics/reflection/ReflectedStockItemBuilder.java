@@ -78,22 +78,25 @@ public class ReflectedStockItemBuilder implements IStockItemBuilder {
 				show("set: %s=%s", xmlAttr, instanceAttributes.get(xmlAttr));
 
 				// determine the field object for the attribute
-				Field f = klass.getDeclaredField(xmlAttr);
+				Field javaAttr = klass.getDeclaredField(xmlAttr);
 
 				// determine the name of the setter
-				String settername = getAccessorNameForField("set",f.getName());
+				String settername = getAccessorNameForField("set",javaAttr.getName());
 
 				// declare the argument types of the setter
-				Class[] setterargs = new Class[]{f.getType()};
+				Class[] setterargs = new Class[]{javaAttr.getType()};
 				// obtain the setter
 				Method setter = klass.getDeclaredMethod(settername,setterargs);
 
+				//javaAttr.setAccessible(true);
 				// invoke the setter
-				if (f.getType() == Integer.TYPE) {
+				if (javaAttr.getType() == Integer.TYPE) {
 					setter.invoke(instance,Integer.parseInt(value));
+					//javaAttr.set(instance, Integer.parseInt(value));
 				}
 				else {
 					setter.invoke(instance,value);
+					//javaAttr.set(instance, value);
 				}
 
 			}
