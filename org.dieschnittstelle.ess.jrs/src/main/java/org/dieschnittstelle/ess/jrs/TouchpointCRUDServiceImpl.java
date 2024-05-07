@@ -9,10 +9,22 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 
 import org.apache.logging.log4j.Logger;
+import org.dieschnittstelle.ess.entities.crm.AbstractTouchpoint;
 import org.dieschnittstelle.ess.entities.crm.StationaryTouchpoint;
 import org.dieschnittstelle.ess.entities.GenericCRUDExecutor;
 
+import static org.dieschnittstelle.ess.utils.Utils.show;
+
 public class TouchpointCRUDServiceImpl implements ITouchpointCRUDService {
+
+//    Annotation?
+//    private ServletContext servletContext;
+//    private HttpServletRequest request;
+//    private GenericCRUDExecutor<AbstractTouchpoint> getCrudExecutor() {
+//        show("getCRUDExecutor(): servletContext: %s", servletContext);
+//        show("getCRUDExecutor(): request: %s", request);
+//        return (GenericCRUDExecutor<AbstractTouchpoint>) servletContext.getAttribute("touchpointCRUD");
+//    };
 
     protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(TouchpointCRUDServiceImpl.class);
 
@@ -39,12 +51,15 @@ public class TouchpointCRUDServiceImpl implements ITouchpointCRUDService {
 
     @Override
     public List<StationaryTouchpoint> readAllTouchpoints() {
+
         return (List) this.touchpointCRUD.readAllObjects();
+        //return (List)getCrudExecutor().readAllObjects();
     }
 
     @Override
     public StationaryTouchpoint createTouchpoint(StationaryTouchpoint touchpoint) {
-        return (StationaryTouchpoint) this.touchpointCRUD.createObject(touchpoint);
+       return (StationaryTouchpoint) this.touchpointCRUD.createObject(touchpoint);
+
     }
 
     @Override
@@ -69,5 +84,10 @@ public class TouchpointCRUDServiceImpl implements ITouchpointCRUDService {
     /*
      * UE JRS1: implement the method for updating touchpoints
      */
+
+    @Override
+    public StationaryTouchpoint updateTouchpoint(long id, StationaryTouchpoint touchpoint) {
+        return null;
+    }
 
 }
