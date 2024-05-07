@@ -20,6 +20,7 @@ public class ProductCRUDRESTClient {
 		/* Es muss Attribut instanziert werden!!!
 		 * TODO: JRS2: create a client for the web service using ResteasyClientBuilder and ResteasyWebTarget
 		 */
+		//Service Proxy instanziieren
 		serviceProxy = null;
 	}
 

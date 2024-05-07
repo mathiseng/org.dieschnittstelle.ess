@@ -88,5 +88,7 @@ public class TouchpointServiceServlet extends HttpServlet {
 	 * TODO: SER4 server-side implementation of deleteTouchpoint
 	 */
 
+    //request.getPathInfo() , dadurch bekommen wir ID vom zu löschenden Element
+
 
 }
