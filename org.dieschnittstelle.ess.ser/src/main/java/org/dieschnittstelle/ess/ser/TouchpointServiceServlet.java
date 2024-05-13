@@ -90,12 +90,27 @@ public class TouchpointServiceServlet extends HttpServlet {
      * TODO: SER4 server-side implementation of deleteTouchpoint
      */
 
-	@Override
-	protected void doDelete(HttpServletRequest request,
-						  HttpServletResponse response) {
-		
+    @Override
+    protected void doDelete(HttpServletRequest request,
+                            HttpServletResponse response) {
+        TouchpointCRUDExecutor crudExecutor = (TouchpointCRUDExecutor) getServletContext().getAttribute("touchpointCRUD");
 
-	}
+        try {
+            long id = Long.parseLong(request.getPathInfo().split("/")[1]);
+            show(" received touchpoint ID in URL: %s", id);
+
+            boolean successful = crudExecutor.deleteTouchpoint(id);
+            if (successful) {
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
+
+        } catch (Exception e) {
+            String err = "got exception: " + e;
+            logger.error(err, e);
+        }
+    }
 
     //request.getPathInfo() , dadurch bekommen wir ID vom zu löschenden Element
 

@@ -9,9 +9,9 @@ import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.logging.log4j.Logger;
@@ -179,6 +179,19 @@ public class ShowTouchpointService {
         logger.info("deleteTouchpoint(): will delete: " + tp);
 
         createClient();
+
+        try {
+            HttpDelete request = new HttpDelete("http://localhost:8080/api/touchpoints/" + tp.getId());
+
+            Future<HttpResponse> responseFuture = client.execute(request, null);
+            HttpResponse response = responseFuture.get();
+
+            Thread.sleep(1000);
+            show("got status code: " + response.getStatusLine().getStatusCode());
+        } catch (Exception e) {
+            logger.error("got exception: " + e, e);
+            throw new RuntimeException(e);
+        }
 
         logger.debug("client running: {}", client.isRunning());
 
