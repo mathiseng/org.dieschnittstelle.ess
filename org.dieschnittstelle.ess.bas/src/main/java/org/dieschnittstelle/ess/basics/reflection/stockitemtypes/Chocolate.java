@@ -1,65 +1,76 @@
 package org.dieschnittstelle.ess.basics.reflection.stockitemtypes;
 
 import org.dieschnittstelle.ess.basics.IStockItem;
+import org.dieschnittstelle.ess.basics.reflection.DisplayAs;
 
 import static org.dieschnittstelle.ess.utils.Utils.*;
 
 public class Chocolate implements IStockItem {
 
-	private int units;
-	
-	private String brandname;
-	
-	private int price;
-	
-	public Chocolate() {
-		show("Chocolate: constructor invoked");
-	}
-	
-	public Chocolate(String brandname) {
-		this.brandname = brandname;
-	}
-	
-	
-	@Override
-	public void initialise(int units,String brandname) {
-		show("Chocolate: intialise() invoked");
+    private int units;
 
-		this.units = units;
-		this.brandname = brandname;
-	}
+    private String brandname;
 
-	@Override
-	public int getUnits() {
-		return this.units;
-	}
+    private String expiry;
 
-	@Override
-	public void setUnits(int units) {
-		this.units = units;
-	}
+    private int price;
 
-	@Override
-	public String toString() {
-		return String.format("<Chocolate %s %d %d>", this.brandname, this.units, this.price);
-	}
+    public Chocolate() {
+        show("Chocolate: constructor invoked");
+    }
 
-	public String getBrandname() {
-		return brandname;
-	}
+    public Chocolate(String brandname) {
+        this.brandname = brandname;
+    }
 
-	public void setBrandname(String brandname) {
-		this.brandname = brandname;
-	}
 
-	public int getPrice() {
-		return price;
-	}
+    @Override
+    public void initialise(int units, String brandname) {
+        show("Chocolate: intialise() invoked");
 
-	public void setPrice(int price) {
-		show("Chocolate: setPrice() invoked");
+        this.units = units;
+        this.brandname = brandname;
+    }
 
-		this.price = price;
-	}
+    @Override
+    public int getUnits() {
+        return this.units;
+    }
+
+    @Override
+    public void setUnits(int units) {
+        this.units = units;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("<Chocolate %s %d %d>", this.brandname, this.units, this.price);
+    }
+
+    public String getBrandname() {
+        return brandname;
+    }
+
+    public void setBrandname(String brandname) {
+        this.brandname = brandname;
+    }
+
+    public String getExpiry() {
+        return this.expiry;
+    }
+
+    public void setExpiry(String expiry) {
+        this.expiry = expiry;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        show("Chocolate: setPrice() invoked");
+
+        this.price = price;
+    }
 
 }
