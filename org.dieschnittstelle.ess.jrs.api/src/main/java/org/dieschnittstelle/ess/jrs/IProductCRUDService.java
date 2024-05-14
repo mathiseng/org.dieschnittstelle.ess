@@ -39,7 +39,8 @@ public interface IProductCRUDService {
     AbstractProduct updateProduct(@PathParam("iproductId") long id,
                                   AbstractProduct update);
 
-	//DELETE /products/<id>	@DELETE
+	//DELETE /products/<id>
+	@DELETE
 	@Path("/{iproductId}")
 	boolean deleteProduct(@PathParam("iproductId") long id);
 
