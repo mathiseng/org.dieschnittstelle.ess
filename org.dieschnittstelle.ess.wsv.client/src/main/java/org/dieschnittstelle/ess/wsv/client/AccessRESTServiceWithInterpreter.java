@@ -1,5 +1,9 @@
 package org.dieschnittstelle.ess.wsv.client;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.logging.log4j.Logger;
@@ -22,16 +26,31 @@ public class AccessRESTServiceWithInterpreter {
      */
     public static void main(String[] args) {
 
-		/*
-		 * TODO WSV1 (here and following TODOs): create an instance of the invocation handler passing the service
-		 * interface and the base url
-		 */
-        JAXRSClientInterpreter invocationHandler = null;
+        /*
+         * TODO WSV1 (here and following TODOs): create an instance of the invocation handler passing the service
+         * interface and the base url
+         */
+        JAXRSClientInterpreter invocationHandler = new JAXRSClientInterpreter(ITouchpointCRUDServiceClient.class, "http://localhost:8080/api");
 
-		/*
-		 * TODO: create a client for the web service using Proxy.newProxyInstance()
-		 */
-        ITouchpointCRUDServiceClient serviceProxy = null;
+        /*
+         * TODO: create a client for the web service using Proxy.newProxyInstance()
+         */
+        ITouchpointCRUDServiceClient serviceProxy = (ITouchpointCRUDServiceClient) Proxy.newProxyInstance(AccessRESTServiceWithInterpreter.class.getClassLoader(),
+                new Class[]{ITouchpointCRUDServiceClient.class},
+                invocationHandler);
+
+        /*(ITouchpointCRUDServiceClient) Proxy.newProxyInstance(AccessRESTServiceWithInterpreter.class.getClassLoader(),
+                new Class[]{ITouchpointCRUDServiceClient.class}, new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        show("handleInvoke on: %s for arguments: %s", method.getName(), args == null ? "[]" : Arrays.asList(args));
+                        if("toString".equals(method.getName())) {
+                            return "My first proxy object with a simple invocation handler";
+                        }
+                        return null;
+                    }
+                });
+        */
 
         show("serviceProxy: " + serviceProxy);
 
@@ -57,7 +76,7 @@ public class AccessRESTServiceWithInterpreter {
                 "Berlin");
         StationaryTouchpoint tp = new StationaryTouchpoint(-1,
                 "BHT WSV Verkaufsstand", addr);
-        tp = (StationaryTouchpoint)serviceProxy.createTouchpoint(tp);
+        tp = (StationaryTouchpoint) serviceProxy.createTouchpoint(tp);
         show("created: " + tp);
 
         // this is for verifying that the touchpoint objects are created without data loss from the json data of the http response
