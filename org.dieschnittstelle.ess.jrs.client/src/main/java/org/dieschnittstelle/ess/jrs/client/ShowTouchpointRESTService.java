@@ -46,7 +46,7 @@ public class ShowTouchpointRESTService {
 		show("serviceProxy: " + serviceProxy + " of class: " + serviceProxy.getClass());
 
 		// 1) read out all touchpoints
-		List<StationaryTouchpoint> touchpoints = serviceProxy.readAllTouchpoints();
+		List<StationaryTouchpoint> touchpoints = (List) serviceProxy.readAllTouchpoints();
 		logger.info("read touchpoints: " + touchpoints);
 
 		// 2) delete the touchpoint after next console input
@@ -85,6 +85,8 @@ public class ShowTouchpointRESTService {
 		logger.info("renamed touchpoint with id " + tp.getId() + " to " + tp.getName());
 
 		show("TestTouchpointRESTService: done.\n");
+
+		serviceProxy.updateTouchpoint(tp.getId(),tp);
 
 	}
 
