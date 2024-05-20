@@ -3,6 +3,7 @@ package org.dieschnittstelle.ess.basics;
 
 import org.dieschnittstelle.ess.basics.annotations.AnnotatedStockItemBuilder;
 import org.dieschnittstelle.ess.basics.annotations.StockItemProxyImpl;
+import org.dieschnittstelle.ess.basics.reflection.DisplayAs;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -47,7 +48,11 @@ public class ShowAnnotations {
 
                 // obtain the getter
                 Method getter = klass.getDeclaredMethod(gettername);
-                attributes.add(String.format("%s:%s", javaAttr.getName(), getter.invoke(instance)));
+                String value = javaAttr.getName();
+                if (javaAttr.isAnnotationPresent(DisplayAs.class)) {
+                    value = javaAttr.getAnnotation(DisplayAs.class).value();
+                }
+                attributes.add(String.format("%s:%s", value, getter.invoke(instance)));
             }
             show("{%s %s}", klass.getSimpleName(), attributes);
 
