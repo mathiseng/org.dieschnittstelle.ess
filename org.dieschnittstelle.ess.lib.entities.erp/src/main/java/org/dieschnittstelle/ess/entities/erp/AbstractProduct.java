@@ -3,6 +3,9 @@ package org.dieschnittstelle.ess.entities.erp;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.entities.GenericCRUDEntity;
 import org.dieschnittstelle.ess.utils.jsonb.JsonbJsonTypeInfoHandler;
@@ -20,6 +23,7 @@ import static org.dieschnittstelle.ess.utils.jsonb.JsonbJsonTypeInfoHandler.KLAS
  * concrete subclass of the abstract class, and thus allows to create correctly typed java objects
  * based on the untyped json data.
  */
+@Entity
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property=KLASSNAME_PROPERTY)
 @JsonbTypeDeserializer(JsonbJsonTypeInfoHandler.class)
 @JsonbTypeSerializer(JsonbJsonTypeInfoHandler.class)
@@ -28,14 +32,16 @@ public abstract class AbstractProduct implements Serializable, GenericCRUDEntity
 	protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(AbstractProduct.class);
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6940403029597060153L;
 
+	@Id
+    @GeneratedValue
 	private long id;
 
 	private String name;
-	
+
 	private int price;
 
 	public AbstractProduct() {
@@ -61,7 +67,7 @@ public abstract class AbstractProduct implements Serializable, GenericCRUDEntity
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public int getPrice() {
 		return price;
 	}
