@@ -1,6 +1,10 @@
 package org.dieschnittstelle.ess.mip.components.erp.crud.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 import org.dieschnittstelle.ess.entities.erp.PointOfSale;
@@ -13,14 +17,22 @@ import java.util.List;
 @Transactional
 @Logged
 public class StockItemCRUDImpl implements StockItemCRUD {
+
+    @Inject
+    @EntityManagerProvider.ERPDataAccessor
+    private EntityManager em;
+
     @Override
     public StockItem createStockItem(StockItem item) {
-        return null;
+        em.persist(item);
+        return item;
     }
 
     @Override
     public StockItem readStockItem(IndividualisedProductItem prod, PointOfSale pos) {
-        return null;
+        Query qu = em.createQuery("SELECT si FROM StockItem si WHERE si.product.id = " + prod.getId() + "AND si.pos.id =" + pos.getId());
+        List<StockItem> stockItems = qu.getResultList();
+        return stockItems.size() > 0 ? stockItems.get(0) : null;
     }
 
     @Override
