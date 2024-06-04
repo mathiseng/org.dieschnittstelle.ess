@@ -1,6 +1,7 @@
 package org.dieschnittstelle.ess.entities.erp;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.logging.log4j.Logger;
