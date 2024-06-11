@@ -3,6 +3,7 @@ package org.dieschnittstelle.ess.mip.components.erp.crud.impl;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 import org.dieschnittstelle.ess.mip.components.erp.api.StockSystem;
 import org.dieschnittstelle.ess.mip.components.erp.api.StockSystemService;
@@ -31,26 +32,34 @@ public class StockSystemServiceImpl implements StockSystemService {
         show("productCrud is: %s of type %s ", productCRUD, productCRUD.getClass());
 
         IndividualisedProductItem prod = (IndividualisedProductItem) productCRUD.readProduct(productId);
-        stockSystem.addToStock(prod,pointOfSaleId,units);
+        stockSystem.addToStock(prod, pointOfSaleId, units);
     }
 
     @Override
     public void removeFromStock(long productId, long pointOfSaleId, int units) {
-
+        IndividualisedProductItem prod = (IndividualisedProductItem) productCRUD.readProduct(productId);
+        stockSystem.removeFromStock(prod, pointOfSaleId, units);
     }
 
     @Override
     public List<IndividualisedProductItem> getProductsOnStock(long pointOfSaleId) {
-        return List.of();
+        return isIdValid(pointOfSaleId) ? stockSystem.getProductsOnStock(pointOfSaleId) : stockSystem.getAllProductsOnStock();
     }
 
     @Override
     public int getUnitsOnStock(long productId, long pointOfSaleId) {
-        return 0;
+        IndividualisedProductItem prod = (IndividualisedProductItem) productCRUD.readProduct(productId);
+
+        return isIdValid(pointOfSaleId) ? stockSystem.getUnitsOnStock(prod, pointOfSaleId) : stockSystem.getTotalUnitsOnStock(prod);
     }
 
     @Override
     public List<Long> getPointsOfSale(long productId) {
-        return List.of();
+        IndividualisedProductItem prod = (IndividualisedProductItem) productCRUD.readProduct(productId);
+        return stockSystem.getPointsOfSale(prod);
+    }
+
+    private boolean isIdValid(long id) {
+        return id > 0;
     }
 }

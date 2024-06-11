@@ -24,7 +24,7 @@ public class StockItemCRUDImpl implements StockItemCRUD {
 
     @Override
     public StockItem createStockItem(StockItem item) {
-        em.persist(item);
+        em.merge(item);
         return item;
     }
 
@@ -32,21 +32,25 @@ public class StockItemCRUDImpl implements StockItemCRUD {
     public StockItem readStockItem(IndividualisedProductItem prod, PointOfSale pos) {
         Query qu = em.createQuery("SELECT si FROM StockItem si WHERE si.product.id = " + prod.getId() + "AND si.pos.id =" + pos.getId());
         List<StockItem> stockItems = qu.getResultList();
-        return stockItems.size() > 0 ? stockItems.get(0) : null;
+        return !stockItems.isEmpty() ? stockItems.get(0) : null;
     }
 
     @Override
     public StockItem updateStockItem(StockItem item) {
-        return null;
+        return em.merge(item);
     }
 
     @Override
     public List<StockItem> readStockItemsForProduct(IndividualisedProductItem prod) {
-        return List.of();
+        Query qu = em.createQuery("SELECT si FROM StockItem si WHERE si.product.id = " + prod.getId());
+        List<StockItem> stockItems = qu.getResultList();
+        return stockItems;
     }
 
     @Override
     public List<StockItem> readStockItemsForPointOfSale(PointOfSale pos) {
-        return List.of();
+        Query qu = em.createQuery("SELECT si FROM StockItem si WHERE si.pos.id = " + pos.getId());
+        List<StockItem> stockItems = qu.getResultList();
+        return stockItems;
     }
 }
