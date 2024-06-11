@@ -19,7 +19,7 @@ public class StockItem {
 	@ManyToOne
 	private PointOfSale pos;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private IndividualisedProductItem product;
 
 	private int price;
