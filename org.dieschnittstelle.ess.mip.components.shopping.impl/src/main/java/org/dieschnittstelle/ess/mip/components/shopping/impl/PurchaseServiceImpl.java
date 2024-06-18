@@ -16,7 +16,7 @@ import org.dieschnittstelle.ess.mip.components.crm.api.CampaignTracking;
 import org.dieschnittstelle.ess.mip.components.crm.api.CustomerTracking;
 import org.dieschnittstelle.ess.mip.components.crm.api.TouchpointAccess;
 import org.dieschnittstelle.ess.mip.components.crm.crud.api.CustomerCRUD;
-import org.dieschnittstelle.ess.mip.components.erp.api.StockSystem;
+import org.dieschnittstelle.ess.mip.components.erp.api.StockSystemService;
 import org.dieschnittstelle.ess.mip.components.erp.crud.api.ProductCRUD;
 import org.dieschnittstelle.ess.mip.components.shopping.api.PurchaseService;
 import org.dieschnittstelle.ess.mip.components.shopping.api.ShoppingException;
@@ -59,7 +59,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     private ProductCRUD productCRUD;
 
     @Inject
-    private StockSystem stockSystem;
+    private StockSystemService stockSystemService;
 
     @Inject
     private TouchpointAccess touchpointAccess;
@@ -174,13 +174,13 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     private void removeProductFromStockIfAvailable(IndividualisedProductItem prod, int units) {
         AtomicInteger unitsToOrder = new AtomicInteger(units);
-        stockSystem.getPointsOfSale(prod).forEach(pos -> {
-            int unitsOnPos = stockSystem.getUnitsOnStock(prod, pos);
+        stockSystemService.getPointsOfSale(prod.getId()).forEach(pos -> {
+            int unitsOnPos = stockSystemService.getUnitsOnStock(prod.getId(), pos);
             if (unitsToOrder.get() <= unitsOnPos) {
-                stockSystem.removeFromStock(prod, pos, unitsToOrder.get());
+                stockSystemService.removeFromStock(prod.getId(), pos, unitsToOrder.get());
                 return;
             } else if (unitsOnPos != 0) {
-                stockSystem.removeFromStock(prod, pos, unitsOnPos);
+                stockSystemService.removeFromStock(prod.getId(), pos, unitsOnPos);
                 unitsToOrder.addAndGet(-unitsOnPos);
             }
         });
