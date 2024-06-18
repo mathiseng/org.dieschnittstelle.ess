@@ -1,7 +1,10 @@
 package org.dieschnittstelle.ess.mip.components.erp.crud.impl;
 
+import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptor;
 import jakarta.transaction.Transactional;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 import org.dieschnittstelle.ess.entities.erp.PointOfSale;
@@ -16,6 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ApplicationScoped
 @Transactional
 @Logged
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION+10)
 public class StockSystemImpl implements StockSystem {
 
     @Inject
