@@ -3,18 +3,17 @@ package org.dieschnittstelle.ess.wsv.interpreter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import jakarta.ws.rs.*;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.*;
 import org.apache.logging.log4j.Logger;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 
@@ -22,9 +21,6 @@ import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ByteArrayEntity;
 
 import org.dieschnittstelle.ess.utils.Http;
@@ -83,6 +79,9 @@ public class JAXRSClientInterpreter implements InvocationHandler {
         String requestUrl = baseurl + commonPath;
 
         // TODO: check whether we have a path annotation and append the requestUrl (path params will be handled when looking at the method arguments)
+        if(meth.getAnnotation(Path.class) != null) {
+            requestUrl += meth.getAnnotation(Path.class).value();
+        }
 
         // a value that needs to be sent via the http request body
         Object requestBodyData = null;
@@ -90,7 +89,10 @@ public class JAXRSClientInterpreter implements InvocationHandler {
         // TODO: check whether we have method arguments - only consider pathparam annotations (if any) on the first argument here - if no args are passed, the value of args is null! if no pathparam annotation is present assume that the argument value is passed via the body of the http request
         if (args != null && args.length > 0) {
             if (meth.getParameterAnnotations()[0].length > 0 && meth.getParameterAnnotations()[0][0].annotationType() == PathParam.class) {
+                String patternName = ((PathParam)meth.getParameterAnnotations()[0][0]).value();
+                requestUrl = requestUrl.replace("{"+patternName+"}", args[0].toString());
                 // TODO: handle PathParam on the first argument - do not forget that in this case we might have a second argument providing a requestBodyData
+                if(args.length >1) requestBodyData = args[1];
                 // TODO: if we have a path param, we need to replace the corresponding pattern in the requestUrl with the parameter value
             } else {
                 // if we do not have a path param, we assume the argument value will be sent via the body of the request
@@ -105,6 +107,10 @@ public class JAXRSClientInterpreter implements InvocationHandler {
             request = new HttpGet(requestUrl);
         } else if (meth.isAnnotationPresent(POST.class)) {
             request = new HttpPost(requestUrl);
+        } else if (meth.isAnnotationPresent(PUT.class)) {
+            request = new HttpPut(requestUrl);
+        } else if (meth.isAnnotationPresent(DELETE.class)) {
+            request = new HttpDelete(requestUrl);
         } else {
             throw new UnsupportedOperationException("so far only post and get Methods are possible");
         }
